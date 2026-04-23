@@ -87,10 +87,11 @@ python main.py --input input.txt
 The output mind map will be saved as mindmap.html. Open it in any browser.
 
 ### Optional flags
-bash
+```bash
 python main.py --input input.txt --method lda      # Use LDA for topic modelling (default)
 python main.py --input input.txt --method bertopic  # Use BERTopic instead
 python main.py --input input.txt --cluster kmeans   # Clustering algorithm (kmeans/birch/dbscan)
+```
 
 ## Pipeline Phases
 
