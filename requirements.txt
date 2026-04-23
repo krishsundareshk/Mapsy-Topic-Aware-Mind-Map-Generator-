@@ -1,0 +1,22 @@
+# NLP & Text Processing
+nltk
+spacy
+
+# Topic Modelling
+gensim
+bertopic
+
+# Embeddings
+sentence-transformers
+transformers
+torch
+
+# Clustering
+scikit-learn
+
+# Evaluation
+rouge-score
+
+# Data & Utilities
+numpy
+pandas
