@@ -72,15 +72,18 @@ Mapsy-Topic-Aware-Mind-Map-Generator/
 
 ## Quickstart
 1. Clone the repository
-bash
+```bash
 git clone https://github.com/your-username/Mapsy-Topic-Aware-Mind-Map-Generator.git
 cd Mapsy-Topic-Aware-Mind-Map-Generator
+```
 2. Install dependencies
-bash
+```bash
 pip install -r requirements.txt
+```
 3. Run the pipeline
-bash
+```bash
 python main.py --input input.txt
+```
 The output mind map will be saved as mindmap.html. Open it in any browser.
 
 ### Optional flags
