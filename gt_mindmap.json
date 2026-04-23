@@ -1,0 +1,143 @@
+{
+  "topics": [
+    {
+      "id": 0,
+      "label": "Earth's Rising Temperature",
+      "l2_nodes": [
+        {
+          "label": "Causes",
+          "l3_nodes": [
+            "greenhouse gases",
+            "carbon dioxide",
+            "methane",
+            "human activities",
+            "burning fossil fuels",
+            "deforestation",
+            "transportation sector",
+            "global warming"
+          ]
+        },
+        {
+          "label": "Effects",
+          "l3_nodes": [
+            "glacier melt",
+            "rising sea levels",
+            "extreme weather",
+            "hurricanes",
+            "droughts",
+            "wildfires",
+            "agricultural disruption",
+            "food insecurity",
+            "biodiversity loss",
+            "habitat destruction"
+          ]
+        },
+        {
+          "label": "Policy",
+          "l3_nodes": [
+            "IPCC",
+            "limit to 1.5°C"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "label": "Renewable Energy",
+      "l2_nodes": [
+        {
+          "label": "Types",
+          "l3_nodes": [
+            "solar energy",
+            "wind energy",
+            "hydropower",
+            "geothermal energy"
+          ]
+        },
+        {
+          "label": "Technology",
+          "l3_nodes": [
+            "photovoltaic cells",
+            "thermal collection systems",
+            "wind turbines",
+            "water turbines",
+            "heat from earth"
+          ]
+        },
+        {
+          "label": "Infrastructure",
+          "l3_nodes": [
+            "energy infrastructure",
+            "large-scale grids",
+            "smart grids"
+          ]
+        },
+        {
+          "label": "Storage",
+          "l3_nodes": [
+            "lithium-ion batteries"
+          ]
+        },
+        {
+          "label": "Economics",
+          "l3_nodes": [
+            "cost reduction",
+            "90 percent drop in a decade"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "label": "Electric Vehicles",
+      "l2_nodes": [
+        {
+          "label": "Technology",
+          "l3_nodes": [
+            "electric motor",
+            "battery",
+            "rechargeable battery packs",
+            "range",
+            "300 miles"
+          ]
+        },
+        {
+          "label": "Infrastructure",
+          "l3_nodes": [
+            "charging infrastructure",
+            "public stations",
+            "private stations",
+            "rapid expansion"
+          ]
+        },
+        {
+          "label": "Policy",
+          "l3_nodes": [
+            "sustainable mobility"
+          ]
+        },
+        {
+          "label": "Future Plans",
+          "l3_nodes": [
+            "phase out combustion engines by 2040"
+          ]
+        },
+        {
+          "label": "Innovation",
+          "l3_nodes": [
+            "solid-state batteries",
+            "smart grids",
+            "synergistic ecosystem"
+          ]
+        },
+        {
+          "label": "Impact",
+          "l3_nodes": [
+            "reduced carbon emissions",
+            "sustainability"
+          ]
+        }
+      ]
+    }
+  ]
+}

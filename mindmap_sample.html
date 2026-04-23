@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Topic-Aware Mind Map</title>
+<style>
+/* ── Reset & vars ────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg       : #070b12;
+  --surface  : rgba(255,255,255,0.04);
+  --border   : rgba(255,255,255,0.09);
+  --text     : #e2e8f0;
+  --dim      : #64748b;
+  --accent   : #6366f1;
+  --radius   : 10px;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+html, body { height: 100%; background: var(--bg); color: var(--text); overflow: hidden; }
+body { display: flex; flex-direction: column; }
+
+/* ── Header ──────────────────────────────────────────────────── */
+header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 18px;
+  background: rgba(7,11,18,0.92);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+  z-index: 40; flex-shrink: 0; flex-wrap: wrap;
+}
+.logo { font-size: 1rem; font-weight: 700; white-space: nowrap; }
+.logo em { color: var(--accent); font-style: normal; }
+
+/* Depth selector — the core UX feature */
+.depth-wrap {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 6px;
+}
+.depth-lbl { font-size: 0.68rem; font-weight: 700; color: var(--dim);
+              letter-spacing: 0.08em; text-transform: uppercase; padding: 0 4px; }
+.d-btn {
+  padding: 4px 14px; border-radius: 999px;
+  border: none; background: transparent;
+  color: var(--dim); font-size: 0.76rem; font-weight: 700;
+  cursor: pointer; transition: all 0.18s; white-space: nowrap;
+}
+.d-btn:hover { color: var(--text); }
+.d-btn.on { background: var(--accent); color: #fff;
+              box-shadow: 0 0 12px rgba(99,102,241,0.5); }
+
+/* Topic tabs */
+.tabs { display: flex; gap: 5px; overflow-x: auto; flex: 1;
+         scrollbar-width: none; min-width: 0; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 4px 12px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--surface);
+  font-size: 0.72rem; font-weight: 600; cursor: pointer;
+  white-space: nowrap; transition: all 0.18s; color: var(--dim);
+  flex-shrink: 0;
+}
+.tab:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+.tab.on { color: #fff; border-color: transparent;
+           box-shadow: 0 0 10px rgba(99,102,241,0.4); }
+
+/* Action buttons */
+.hbtn {
+  padding: 4px 12px; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--dim); font-size: 0.72rem; font-weight: 600;
+  cursor: pointer; transition: all 0.18s; white-space: nowrap;
+}
+.hbtn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+/* ── Main ────────────────────────────────────────────────────── */
+.main { flex: 1; display: flex; overflow: hidden; }
+#cw { flex: 1; overflow: hidden; cursor: grab; position: relative; }
+#cw:active { cursor: grabbing; }
+#svg { display: block; transform-origin: 0 0; will-change: transform; }
+
+/* ── Sidebar ─────────────────────────────────────────────────── */
+#sb {
+  width: 270px; flex-shrink: 0;
+  background: rgba(7,11,18,0.96);
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow: hidden; transition: width 0.22s;
+}
+#sb.shut { width: 0; }
+.sb-head {
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+  color: var(--dim); text-transform: uppercase; flex-shrink: 0;
+}
+.sb-body { flex: 1; overflow-y: auto; padding: 10px; }
+.sb-body::-webkit-scrollbar { width: 3px; }
+.sb-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius:2px; }
+
+/* Topic cards */
+.tc {
+  border-radius: 8px; padding: 11px 12px; margin-bottom: 8px;
+  border: 1px solid var(--border); background: var(--surface);
+  cursor: pointer; transition: all 0.18s;
+}
+.tc:hover { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); }
+.tc.on { border-color: var(--tc-col); background: rgba(var(--tc-rgb),0.08); }
+.tc-title { font-size: 0.84rem; font-weight: 700; margin-bottom: 3px; }
+.tc-meta  { font-size: 0.68rem; color: var(--dim); margin-bottom: 8px; }
+.tc-l2 { font-size: 0.74rem; color: var(--text); padding: 2px 0 2px 9px;
+           border-left: 2px solid rgba(255,255,255,0.1); margin: 3px 0;
+           white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tc-l3 { font-size: 0.68rem; color: var(--dim); padding: 1px 0 1px 19px; margin: 1px 0;
+           white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ── Tooltip ─────────────────────────────────────────────────── */
+#tt {
+  position: fixed; pointer-events: none; z-index: 80;
+  background: rgba(10,15,25,0.96);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 8px; padding: 8px 12px;
+  font-size: 0.78rem; max-width: 210px;
+  opacity: 0; transition: opacity 0.12s;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+#tt.on { opacity: 1; }
+#tt strong { display: block; margin-bottom: 2px; font-size: 0.8rem; }
+#tt span { color: var(--dim); font-size: 0.68rem; }
+
+/* ── Toast ───────────────────────────────────────────────────── */
+#toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: rgba(12,18,30,0.95); border: 1px solid rgba(255,255,255,0.12);
+  padding: 8px 16px; border-radius: 8px;
+  font-size: 0.78rem; opacity: 0; transition: opacity 0.22s;
+  pointer-events: none; z-index: 99;
+}
+#toast.on { opacity: 1; }
+
+/* ── Legend ──────────────────────────────────────────────────── */
+.legend {
+  position: absolute; bottom: 14px; left: 14px;
+  background: rgba(7,11,18,0.85); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 12px;
+  font-size: 0.68rem; color: var(--dim);
+  pointer-events: none;
+}
+.legend-row { display: flex; align-items: center; gap: 7px; margin: 3px 0; }
+.leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── Spinner ─────────────────────────────────────────────────── */
+#spin {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 14px;
+  background: var(--bg); z-index: 50; transition: opacity 0.4s;
+}
+#spin.gone { opacity: 0; pointer-events: none; }
+.ring {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 3px solid rgba(99,102,241,0.2);
+  border-top-color: #6366f1;
+  animation: spin 0.75s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin-txt { font-size: 0.82rem; color: var(--dim); }
+</style>
+</head>
+<body>
+
+<div id="spin">
+  <div class="ring"></div>
+  <div class="spin-txt">Building mind map…</div>
+</div>
+
+<header>
+  <div class="logo">🧠 <em>Mind</em>Map</div>
+
+  <!-- Depth selector — changes view in-place, no reload -->
+  <div class="depth-wrap">
+    <span class="depth-lbl">Depth</span>
+    <button class="d-btn" data-d="1" onclick="setDepth(1)">L1 Overview</button>
+    <button class="d-btn" data-d="2" onclick="setDepth(2)">L2 Standard</button>
+    <button class="d-btn" data-d="3" onclick="setDepth(3)">L3 Detailed</button>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <button class="hbtn" onclick="fitAll()">⊞ Fit</button>
+  <button class="hbtn" onclick="toggleSb()">☰ Panel</button>
+</header>
+
+<div class="main">
+  <div id="cw">
+    <svg id="svg" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="legend">
+      <div class="legend-row"><div class="leg-dot" style="background:#6366f1;box-shadow:0 0 5px #6366f1"></div>Theme root</div>
+      <div class="legend-row"><div class="leg-dot" style="background:#94a3b8"></div>Sub-group (L2)</div>
+      <div class="legend-row"><div class="leg-dot" style="background:#334155;border:1px solid #475569"></div>Concept (L3)</div>
+    </div>
+  </div>
+  <div id="sb">
+    <div class="sb-head">Topics &amp; Concepts</div>
+    <div class="sb-body" id="sb-body"></div>
+  </div>
+</div>
+
+<div id="tt"></div>
+<div id="toast"></div>
+
+<script>
+// ── Data ─────────────────────────────────────────────────────────────────────
+const ALL_TOPICS = [{"id": 0, "label": "Renewable & Supply", "wef": 0.6329, "children": [{"id": "l2_0_0", "label": "Modern Electric Vehicles", "wef": 0.6279, "children": [{"id": "n0", "label": "Earth Climate", "wef": 0.7}, {"id": "n1", "label": "Unprecedented Rate", "wef": 0.7}, {"id": "n2", "label": "Past Century", "wef": 0.7}, {"id": "n5", "label": "Example Sunlight", "wef": 0.7}, {"id": "n17", "label": "Many", "wef": 0.68}, {"id": "n18", "label": "Vulnerable Regions", "wef": 0.68}]}, {"id": "l2_0_1", "label": "Widespread Food Insecurity", "wef": 0.68, "children": [{"id": "n19", "label": "Food Insecurity", "wef": 0.58}]}, {"id": "l2_0_2", "label": "Natural Sources", "wef": 0.591, "children": [{"id": "n7", "label": "Energy Sources", "wef": 0.4821}]}, {"id": "l2_0_3", "label": "Renewable Energy", "wef": 0.6625, "children": [{"id": "n8", "label": "Geothermal Energy", "wef": 0.625}]}]}, {"id": 1, "label": "Transportation & Emissions", "wef": 0.6353, "children": [{"id": "l2_1_1", "label": "Greenhouse Gas Emissions", "wef": 0.77, "children": [{"id": "n4", "label": "Gas Emissions", "wef": 0.72}]}, {"id": "l2_1_2", "label": "Turbines", "wef": 0.6239, "children": [{"id": "n5", "label": "Climate", "wef": 0.695}, {"id": "n6", "label": "Renewable Energy", "wef": 0.675}, {"id": "n7", "label": "Carbon Dioxide", "wef": 0.6421}, {"id": "n9", "label": "Industrial Revolution", "wef": 0.6421}, {"id": "n11", "label": "Hurricanes Droughts", "wef": 0.6421}, {"id": "n12", "label": "Wildfires", "wef": 0.6421}]}, {"id": "l2_1_4", "label": "Extreme Weather Events", "wef": 0.5921, "children": [{"id": "n14", "label": "Weather Events", "wef": 0.5421}]}]}, {"id": 2, "label": "Electric & Solar", "wef": 0.6295, "children": [{"id": "l2_2_0", "label": "Fossil Fuels", "wef": 0.617, "children": [{"id": "n12", "label": "Deforestation", "wef": 0.6925}, {"id": "n13", "label": "Primary Drivers", "wef": 0.6925}, {"id": "n18", "label": "Alarming Rates", "wef": 0.6925}, {"id": "n3", "label": "Pre-industrial Times", "wef": 0.6406}, {"id": "n4", "label": "Biodiversity Loss", "wef": 0.6406}, {"id": "n5", "label": "Habitat Destruction", "wef": 0.6406}]}, {"id": "l2_2_1", "label": "Polar Ice Caps", "wef": 0.7425, "children": [{"id": "n19", "label": "Ice Caps", "wef": 0.5925}]}, {"id": "l2_2_3", "label": "Global Temperatures", "wef": 0.6165, "children": [{"id": "n14", "label": "Global Warming", "wef": 0.5925}]}]}];
+const PALETTES   = [{"root": "#1e3a5f", "branch": "#2563eb", "leaf": "#93c5fd", "edge": "rgba(96,165,250,0.45)", "text": "#dbeafe", "glow": "#3b82f6"}, {"root": "#14532d", "branch": "#16a34a", "leaf": "#86efac", "edge": "rgba(74,222,128,0.45)", "text": "#dcfce7", "glow": "#22c55e"}, {"root": "#7c2d12", "branch": "#ea580c", "leaf": "#fdba74", "edge": "rgba(251,146,60,0.45)", "text": "#ffedd5", "glow": "#f97316"}, {"root": "#4c1d95", "branch": "#7c3aed", "leaf": "#c4b5fd", "edge": "rgba(167,139,250,0.45)", "text": "#ede9fe", "glow": "#8b5cf6"}, {"root": "#831843", "branch": "#db2777", "leaf": "#f9a8d4", "edge": "rgba(249,168,212,0.45)", "text": "#fce7f3", "glow": "#ec4899"}, {"root": "#134e4a", "branch": "#0d9488", "leaf": "#5eead4", "edge": "rgba(45,212,191,0.45)", "text": "#ccfbf1", "glow": "#14b8a6"}, {"root": "#713f12", "branch": "#ca8a04", "leaf": "#fde047", "edge": "rgba(250,204,21,0.45)", "text": "#fef9c3", "glow": "#eab308"}, {"root": "#1e1b4b", "branch": "#4f46e5", "leaf": "#a5b4fc", "edge": "rgba(165,180,252,0.45)", "text": "#e0e7ff", "glow": "#6366f1"}];
+const INIT_DEPTH = 3;
+
+let depth       = INIT_DEPTH;
+let focusTopic  = null;   // null = show all
+
+// ── DOM refs ──────────────────────────────────────────────────────────────────
+let svgEl, cw;
+let sc = 1, tx = 0, ty = 0;
+let drag = false, dsx = 0, dsy = 0;
+
+window.addEventListener('DOMContentLoaded', () => {
+  svgEl = document.getElementById('svg');
+  cw    = document.getElementById('cw');
+
+  buildTabs();
+  buildSidebar();
+  markDepth(depth);
+  render();
+
+  setupPanZoom();
+  setTimeout(() => document.getElementById('spin').classList.add('gone'), 500);
+});
+
+// ── Depth control (the key feature) ──────────────────────────────────────────
+function setDepth(d) {
+  depth = d;
+  markDepth(d);
+  buildSidebar();
+  render();
+  toast(['', 'L1 Overview — roots only', 'L2 Standard — sub-groups', 'L3 Detailed — all concepts'][d]);
+}
+
+function markDepth(d) {
+  document.querySelectorAll('.d-btn').forEach(b =>
+    b.classList.toggle('on', +b.dataset.d === d));
+}
+
+// ── Topic tabs ────────────────────────────────────────────────────────────────
+function buildTabs() {
+  const el = document.getElementById('tabs');
+  el.innerHTML = '';
+
+  const all = mkTab('All', null, true);
+  el.appendChild(all);
+
+  ALL_TOPICS.forEach((t, i) => {
+    const pal = PALETTES[i % PALETTES.length];
+    const tab = mkTab(t.label, t.id, false, pal.glow);
+    el.appendChild(tab);
+  });
+}
+
+function mkTab(label, id, active, color) {
+  const b = document.createElement('button');
+  b.className = 'tab' + (active ? ' on' : '');
+  b.textContent = label;
+  if (color) b.style.cssText = `color:${color};border-color:${color}40`;
+  b.onclick = () => selectTopic(id, b);
+  return b;
+}
+
+function selectTopic(id, btn) {
+  focusTopic = id;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  btn.classList.add('on');
+  // Highlight sidebar card
+  document.querySelectorAll('.tc').forEach(c =>
+    c.classList.toggle('on', id !== null && +c.dataset.id === id));
+  render();
+}
+
+// ── Sidebar ───────────────────────────────────────────────────────────────────
+function buildSidebar() {
+  const body = document.getElementById('sb-body');
+  body.innerHTML = '';
+  ALL_TOPICS.forEach((t, i) => {
+    const pal = PALETTES[i % PALETTES.length];
+    const card = document.createElement('div');
+    card.className = 'tc';
+    card.dataset.id = t.id;
+    const rgb = hexRgb(pal.glow);
+    card.style.cssText = `--tc-col:${pal.glow};--tc-rgb:${rgb}`;
+
+    const nL2 = t.children.length;
+    const nL3 = t.children.reduce((s, c) => s + c.children.length, 0);
+    let h = `<div class="tc-title" style="color:${pal.glow}">${t.label}</div>`;
+    h += `<div class="tc-meta">WEF ${t.wef.toFixed(3)} · ${nL2} groups · ${nL3} concepts</div>`;
+
+    if (depth >= 2) {
+      t.children.forEach(c => {
+        h += `<div class="tc-l2">▸ ${c.label}</div>`;
+        if (depth >= 3) {
+          c.children.slice(0, 4).forEach(l3 =>
+            h += `<div class="tc-l3">· ${l3.label}</div>`);
+          if (c.children.length > 4)
+            h += `<div class="tc-l3" style="color:var(--dim)">+ ${c.children.length - 4} more…</div>`;
+        }
+      });
+    }
+    card.innerHTML = h;
+    const tabBtn = document.querySelector(`.tab[data-id="${t.id}"]`) ||
+                   document.querySelectorAll('.tab')[i + 1];
+    card.onclick = () => selectTopic(t.id, tabBtn || document.querySelectorAll('.tab')[i+1]);
+    body.appendChild(card);
+  });
+}
+
+function toggleSb() {
+  document.getElementById('sb').classList.toggle('shut');
+  setTimeout(fitAll, 260);
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function render() {
+  const topics = focusTopic === null
+    ? ALL_TOPICS
+    : ALL_TOPICS.filter(t => t.id === focusTopic);
+  if (!topics.length) { svgEl.innerHTML = ''; return; }
+
+  const cols = Math.min(topics.length, 3);
+  const rows = Math.ceil(topics.length / cols);
+  const CW = 1000, CH = 880;
+  const W = cols * CW, H = rows * CH;
+
+  svgEl.setAttribute('width',  W);
+  svgEl.setAttribute('height', H);
+
+  let out = buildDefs(topics);
+
+  // Background dots
+  out += `<rect width="${W}" height="${H}"
+    fill="url(#dots)" rx="0"/>`;
+
+  topics.forEach((t, idx) => {
+    const pi  = ALL_TOPICS.findIndex(x => x.id === t.id);
+    const pal = PALETTES[pi % PALETTES.length];
+    const cx  = (idx % cols) * CW + CW / 2;
+    const cy  = Math.floor(idx / cols) * CH + CH / 2;
+    out += renderTopic(t, cx, cy, pal, pi, depth);
+  });
+
+  svgEl.innerHTML = out;
+
+  // Tooltip events
+  svgEl.querySelectorAll('[data-tip]').forEach(el => {
+    el.addEventListener('mouseenter', onHover);
+    el.addEventListener('mousemove',  onMove);
+    el.addEventListener('mouseleave', onLeave);
+    el.addEventListener('click',      onClick);
+  });
+
+  fitAll();
+}
+
+function buildDefs(topics) {
+  let g = `<defs>
+  <pattern id="dots" width="32" height="32" patternUnits="userSpaceOnUse">
+    <circle cx="16" cy="16" r="0.7" fill="rgba(255,255,255,0.035)"/>
+  </pattern>`;
+
+  ALL_TOPICS.forEach((_, i) => {
+    const pal = PALETTES[i % PALETTES.length];
+    g += `<radialGradient id="rg${i}" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="${pal.branch}" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="${pal.root}" stop-opacity="1"/>
+    </radialGradient>
+    <filter id="gl${i}" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>`;
+  });
+
+  g += `<filter id="gs" x="-40%" y="-40%" width="180%" height="180%">
+    <feGaussianBlur stdDeviation="3" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter></defs>`;
+  return g;
+}
+
+// ── Topic renderer ────────────────────────────────────────────────────────────
+function renderTopic(t, cx, cy, pal, pi, d) {
+  const L2 = d >= 2 ? t.children : [];
+  const nL2 = L2.length;
+
+  // Radii adapt to node count
+  const rL2 = Math.min(240, Math.max(160, 120 + nL2 * 20));
+  const rL3 = Math.min(380, Math.max(280, rL2 + 100 + nL2 * 8));
+
+  const parts = [];
+
+  // Compute L2 angles
+  const l2ang = L2.map((_, i) => (2 * Math.PI * i / nL2) - Math.PI / 2);
+  const l2pos = l2ang.map(a => ({
+    x: cx + rL2 * Math.cos(a), y: cy + rL2 * Math.sin(a), a
+  }));
+
+  // Edges root→L2
+  l2pos.forEach(p =>
+    parts.push(curve(cx, cy, p.x, p.y, pal.edge, 1.6)));
+
+  // Edges L2→L3 + L3 nodes
+  if (d >= 3) {
+    L2.forEach((l2, i) => {
+      const pp  = l2pos[i];
+      const n3  = l2.children.length;
+      if (n3 === 0) return;
+      const spr = Math.min(1.1, 1.8 / Math.max(nL2, 1));
+      const a3s = fanAngles(pp.a, spr, n3);
+      l2.children.forEach((l3, j) => {
+        const lx = cx + rL3 * Math.cos(a3s[j]);
+        const ly = cy + rL3 * Math.sin(a3s[j]);
+        parts.push(curve(pp.x, pp.y, lx, ly, 'rgba(255,255,255,0.08)', 1));
+        parts.push(leafNode(lx, ly, l3.label, l3.wef, pal));
+      });
+    });
+  }
+
+  // L2 nodes
+  L2.forEach((l2, i) => {
+    parts.push(branchNode(l2pos[i].x, l2pos[i].y, l2.label, l2.wef, pal, pi));
+  });
+
+  // Root
+  parts.push(rootNode(cx, cy, t.label, t.wef, pal, pi));
+
+  return `<g data-topic="${t.id}">${parts.join('')}</g>`;
+}
+
+// ── Node drawing functions ────────────────────────────────────────────────────
+function rootNode(x, y, label, wef, pal, pi) {
+  const r = 54;
+  const lines = wrap(label, 13, 3);
+  const baseY = y - (lines.length - 1) * 7;
+  const txt   = lines.map((l, i) =>
+    svgText(x, baseY + i * 14, l, 12, 700, pal.text, pal.root, 3)
+  ).join('');
+  return `
+  <circle cx="${x}" cy="${y}" r="${r + 10}" fill="${pal.glow}" opacity="0.12"
+    filter="url(#gl${pi})"/>
+  <circle cx="${x}" cy="${y}" r="${r}"
+    fill="url(#rg${pi})" stroke="${pal.glow}" stroke-width="2.5"
+    data-tip="${esc(label)}" data-wef="${wef}" data-level="Root"
+    class="ncirc" style="cursor:pointer"/>
+  ${txt}`;
+}
+
+function branchNode(x, y, label, wef, pal, pi) {
+  const r = 36;
+  const lines = wrap(label, 12, 2);
+  const baseY = y - (lines.length - 1) * 6.5;
+  const txt   = lines.map((l, i) =>
+    svgText(x, baseY + i * 13, l, 10, 600, pal.leaf, pal.root, 3)
+  ).join('');
+  return `
+  <circle cx="${x}" cy="${y}" r="${r}"
+    fill="${pal.branch}" stroke="${pal.leaf}" stroke-width="1.5"
+    data-tip="${esc(label)}" data-wef="${wef}" data-level="L2"
+    class="ncirc" style="cursor:pointer"/>
+  ${txt}`;
+}
+
+function leafNode(x, y, label, wef, pal) {
+  const r  = 22;
+  const lbl = label.length > 18 ? label.slice(0, 17) + '…' : label;
+  const lines = wrap(lbl, 13, 2);
+  const baseY = y - (lines.length - 1) * 5.5;
+  const txt   = lines.map((l, i) =>
+    svgText(x, baseY + i * 11, l, 8.5, 500, 'rgba(255,255,255,0.78)', 'rgba(0,0,0,0.6)', 2.5)
+  ).join('');
+  return `
+  <circle cx="${x}" cy="${y}" r="${r}"
+    fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.18)" stroke-width="1"
+    data-tip="${esc(label)}" data-wef="${wef}" data-level="L3"
+    class="ncirc" style="cursor:pointer"/>
+  ${txt}`;
+}
+
+function curve(x1, y1, x2, y2, color, w) {
+  const dx = x2 - x1, dy = y2 - y1;
+  return `<path d="M${x1},${y1} C${x1+dx*0.4},${y1+dy*0.05} ${x2-dx*0.4},${y2-dy*0.05} ${x2},${y2}"
+    fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
+}
+
+function svgText(x, y, text, size, weight, fill, stroke, sw) {
+  return `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle"
+    font-size="${size}" font-weight="${weight}" fill="${fill}"
+    paint-order="stroke" stroke="${stroke}" stroke-width="${sw}"
+    font-family="'Segoe UI',system-ui,sans-serif">${text}</text>`;
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function fanAngles(center, spread, n) {
+  if (n === 0) return [];
+  if (n === 1) return [center];
+  return Array.from({length: n}, (_, i) =>
+    center - spread / 2 + i * spread / (n - 1));
+}
+
+function wrap(text, maxCh, maxLines) {
+  const words = text.split(' ');
+  const lines = []; let cur = '';
+  for (const w of words) {
+    if (lines.length >= maxLines) break;
+    if (cur && (cur + ' ' + w).length > maxCh) {
+      lines.push(cur); cur = w;
+    } else {
+      cur = cur ? cur + ' ' + w : w;
+    }
+  }
+  if (cur && lines.length < maxLines) lines.push(cur);
+  return lines.length ? lines : [text.slice(0, maxCh)];
+}
+
+function esc(s) { return s.replace(/"/g,'&quot;').replace(/&/g,'&amp;'); }
+function hexRgb(h) {
+  return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)].join(',');
+}
+
+// ── Tooltip ───────────────────────────────────────────────────────────────────
+const tt = document.getElementById('tt');
+function onHover(e) {
+  tt.innerHTML = `<strong>${e.target.dataset.tip}</strong>
+    <span>WEF: ${(+e.target.dataset.wef||0).toFixed(3)} · ${e.target.dataset.level}</span>`;
+  tt.classList.add('on');
+  posTooltip(e);
+}
+function onMove(e)  { posTooltip(e); }
+function onLeave()  { tt.classList.remove('on'); }
+function posTooltip(e) {
+  let x = e.clientX + 14, y = e.clientY - 12;
+  if (x + 220 > window.innerWidth)  x = e.clientX - 220;
+  if (y + 60  > window.innerHeight) y = e.clientY - 70;
+  tt.style.cssText += `;left:${x}px;top:${y}px`;
+}
+
+// ── Node click — focus its topic ──────────────────────────────────────────────
+function onClick(e) {
+  const g  = e.target.closest('[data-topic]');
+  if (!g) return;
+  const id = +g.dataset.topic;
+  const tab = document.querySelectorAll('.tab')[
+    ALL_TOPICS.findIndex(t => t.id === id) + 1];
+  if (tab) selectTopic(id, tab);
+}
+
+// ── Pan + zoom ────────────────────────────────────────────────────────────────
+function applyT() { svgEl.style.transform = `translate(${tx}px,${ty}px) scale(${sc})`; }
+
+function setupPanZoom() {
+  cw.addEventListener('wheel', e => {
+    e.preventDefault();
+    const r = cw.getBoundingClientRect();
+    const mx = e.clientX - r.left, my = e.clientY - r.top;
+    const f  = e.deltaY < 0 ? 1.1 : 0.91;
+    tx = mx - (mx - tx) * f; ty = my - (my - ty) * f;
+    sc = Math.max(0.1, Math.min(6, sc * f));
+    applyT();
+  }, { passive: false });
+
+  cw.addEventListener('mousedown', e => {
+    if (e.button) return;
+    drag = true; dsx = e.clientX - tx; dsy = e.clientY - ty;
+  });
+  window.addEventListener('mousemove', e => {
+    if (!drag) return;
+    tx = e.clientX - dsx; ty = e.clientY - dsy; applyT();
+  });
+  window.addEventListener('mouseup', () => drag = false);
+
+  // Touch
+  let ptd = 0;
+  cw.addEventListener('touchstart', e => {
+    if (e.touches.length === 1) { drag = true; dsx = e.touches[0].clientX - tx; dsy = e.touches[0].clientY - ty; }
+    else if (e.touches.length === 2) {
+      drag = false;
+      ptd = Math.hypot(e.touches[0].clientX - e.touches[1].clientX,
+                       e.touches[0].clientY - e.touches[1].clientY);
+    }
+  }, { passive: true });
+  cw.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (e.touches.length === 1 && drag) {
+      tx = e.touches[0].clientX - dsx; ty = e.touches[0].clientY - dsy; applyT();
+    } else if (e.touches.length === 2) {
+      const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX,
+                           e.touches[0].clientY - e.touches[1].clientY);
+      sc = Math.max(0.1, Math.min(6, sc * d / (ptd || d)));
+      ptd = d; applyT();
+    }
+  }, { passive: false });
+  cw.addEventListener('touchend', () => drag = false);
+
+  // Keys
+  document.addEventListener('keydown', e => {
+    if (e.key === '0')            fitAll();
+    if (e.key === '+' || e.key === '=') { sc = Math.min(6, sc * 1.12); applyT(); }
+    if (e.key === '-')            { sc = Math.max(0.1, sc * 0.89); applyT(); }
+    if (e.key === 'p')            toggleSb();
+    if (e.key === '1') setDepth(1);
+    if (e.key === '2') setDepth(2);
+    if (e.key === '3') setDepth(3);
+  });
+}
+
+function fitAll() {
+  const W = +svgEl.getAttribute('width')  || 800;
+  const H = +svgEl.getAttribute('height') || 600;
+  const vw = cw.clientWidth  || window.innerWidth;
+  const vh = cw.clientHeight || window.innerHeight - 52;
+  const pad = 50;
+  sc = Math.min((vw - pad*2) / W, (vh - pad*2) / H, 1.5);
+  tx = (vw - W * sc) / 2;
+  ty = (vh - H * sc) / 2;
+  applyT();
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+let toastTimer;
+function toast(msg, ms = 2000) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('on'), ms);
+}
+</script>
+</body>
+</html>
