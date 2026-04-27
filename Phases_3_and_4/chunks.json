@@ -1,0 +1,374 @@
+{
+  "topics": [
+    {
+      "topic_id": 0,
+      "sentences": [
+      {
+        "id": 16,
+        "score": 0.326,
+        "text": "The cost of solar and wind power has dropped by approximately 90 percent over the last decade alone",
+        "chunks": [
+          {"label": "NP", "tokens": ["The", "cost"]},
+          {"label": "PP", "tokens": ["of", "solar"]},
+          {"label": "OTHER", "tokens": ["and"]},
+          {"label": "NP", "tokens": ["wind", "power"]},
+          {"label": "VP", "tokens": ["has", "dropped"]},
+          {"label": "OTHER", "tokens": ["by"]},
+          {"label": "OTHER", "tokens": ["approximately"]},
+          {"label": "OTHER", "tokens": ["90"]},
+          {"label": "NP", "tokens": ["percent"]},
+          {"label": "PP", "tokens": ["over", "the", "last", "decade", "alone"]}
+        ]
+      },
+      {
+        "id": 20,
+        "score": 0.326,
+        "text": "The transportation sector is one of the largest contributors to greenhouse gas emissions across the globe",
+        "chunks": [
+          {"label": "NP", "tokens": ["The", "transportation", "sector"]},
+          {"label": "VP", "tokens": ["is", "one"]},
+          {"label": "PP", "tokens": ["of", "the", "largest", "contributors"]},
+          {"label": "OTHER", "tokens": ["to"]},
+          {"label": "VP", "tokens": ["greenhouse"]},
+          {"label": "NP", "tokens": ["gas", "emissions"]},
+          {"label": "PP", "tokens": ["across", "the", "globe"]}
+        ]
+      }
+    ]
+    },
+    {
+      "topic_id": 1,
+      "sentences": [
+      {
+        "id": 1,
+        "score": 0.333,
+        "text": "Greenhouse gas emissions primarily carbon dioxide and methane have significantly increased since the industrial revolution",
+        "chunks": [
+          {"label": "NP", "tokens": ["Greenhouse", "gas", "emissions"]},
+          {"label": "OTHER", "tokens": ["primarily"]},
+          {"label": "NP", "tokens": ["carbon", "dioxide"]},
+          {"label": "OTHER", "tokens": ["and"]},
+          {"label": "NP", "tokens": ["methane"]},
+          {"label": "VP", "tokens": ["have", "significantly", "increased"]},
+          {"label": "OTHER", "tokens": ["since"]},
+          {"label": "NP", "tokens": ["the", "industrial", "revolution"]}
+        ]
+      },
+      {
+        "id": 21,
+        "score": 0.348,
+        "text": "Electric vehicles or EVs offer a transformative solution to significantly reduce carbon emissions from transportation",
+        "chunks": [
+          {"label": "NP", "tokens": ["Electric", "vehicles"]},
+          {"label": "OTHER", "tokens": ["or"]},
+          {"label": "NP", "tokens": ["EVs"]},
+          {"label": "VP", "tokens": ["offer"]},
+          {"label": "NP", "tokens": ["a", "transformative", "solution"]},
+          {"label": "OTHER", "tokens": ["to"]},
+          {"label": "VP", "tokens": ["significantly", "reduce"]},
+          {"label": "NP", "tokens": ["carbon", "emissions"]},
+          {"label": "PP", "tokens": ["from", "transportation"]}
+        ]
+      },
+      {
+        "id": 22,
+        "score": 0.333,
+        "text": "Electric vehicles are powered by electric motors that draw energy from high-capacity rechargeable battery packs",
+        "chunks": [
+          {"label": "NP", "tokens": ["Electric", "vehicles"]},
+          {"label": "VP", "tokens": ["are", "powered"]},
+          {"label": "PP", "tokens": ["by", "electric", "motors"]},
+          {"label": "NP", "tokens": ["that", "draw", "energy"]},
+          {"label": "PP", "tokens": ["from", "high-capacity"]},
+          {"label": "NP", "tokens": ["rechargeable", "battery", "packs"]}
+        ]
+      },
+      {
+        "id": 23,
+        "score": 0.308,
+        "text": "Modern electric vehicles can travel over 300 miles on a single charge making them viable for everyday practical use",
+        "chunks": [
+          {"label": "NP", "tokens": ["Modern"]},
+          {"label": "NP", "tokens": ["electric", "vehicles"]},
+          {"label": "VP", "tokens": ["can", "travel"]},
+          {"label": "OTHER", "tokens": ["over"]},
+          {"label": "OTHER", "tokens": ["300"]},
+          {"label": "NP", "tokens": ["miles"]},
+          {"label": "PP", "tokens": ["on", "a", "single", "charge"]},
+          {"label": "VP", "tokens": ["making"]},
+          {"label": "OTHER", "tokens": ["them"]},
+          {"label": "OTHER", "tokens": ["viable"]},
+          {"label": "PP", "tokens": ["for", "everyday"]},
+          {"label": "OTHER", "tokens": ["practical"]},
+          {"label": "VP", "tokens": ["use"]}
+        ]
+      }
+    ]
+    },
+    {
+      "topic_id": 2,
+      "sentences": [
+      {
+        "id": 18,
+        "score": 0.320,
+        "text": "Energy storage technologies such as lithium-ion batteries are critical for managing the intermittent nature of renewable supply",
+        "chunks": [
+          {"label": "NP", "tokens": ["Energy", "storage", "technologies", "such", "as", "lithium-ion", "batteries"]},
+          {"label": "OTHER", "tokens": ["are"]},
+          {"label": "OTHER", "tokens": ["critical"]},
+          {"label": "PP", "tokens": ["for", "managing"]},
+          {"label": "NP", "tokens": ["the", "intermittent", "nature"]},
+          {"label": "OTHER", "tokens": ["of"]},
+          {"label": "OTHER", "tokens": ["renewable"]},
+          {"label": "OTHER", "tokens": ["supply"]}
+        ]
+      },
+      {
+        "id": 24,
+        "score": 0.311,
+        "text": "Charging infrastructure is expanding rapidly with thousands of new public and private stations installed each year",
+        "chunks": [
+          {"label": "NP", "tokens": ["Charging", "infrastructure"]},
+          {"label": "VP", "tokens": ["is", "expanding"]},
+          {"label": "OTHER", "tokens": ["rapidly"]},
+          {"label": "OTHER", "tokens": ["with"]},
+          {"label": "VP", "tokens": ["thousands"]},
+          {"label": "PP", "tokens": ["of", "new"]},
+          {"label": "OTHER", "tokens": ["public"]},
+          {"label": "OTHER", "tokens": ["and"]},
+          {"label": "VP", "tokens": ["private"]},
+          {"label": "NP", "tokens": ["stations"]},
+          {"label": "VP", "tokens": ["installed"]},
+          {"label": "NP", "tokens": ["each", "year"]}
+        ]
+      }
+    ]
+    },
+    {
+      "topic_id": 3,
+      "sentences": [
+      {
+        "id": 2,
+        "score": 0.325,
+        "text": "Human activities such as burning fossil fuels and deforestation are the primary drivers of global warming",
+        "chunks": [
+          {"label": "NP", "tokens": ["Human", "activities", "such", "as", "burning", "fossil", "fuels"]},
+          {"label": "OTHER", "tokens": ["and"]},
+          {"label": "NP", "tokens": ["deforestation"]},
+          {"label": "OTHER", "tokens": ["are"]},
+          {"label": "NP", "tokens": ["the", "primary", "drivers"]},
+          {"label": "OTHER", "tokens": ["of"]},
+          {"label": "OTHER", "tokens": ["global"]},
+          {"label": "VP", "tokens": ["warming"]}
+        ]
+      },
+      {
+        "id": 3,
+        "score": 0.332,
+        "text": "Scientists have recorded that global temperatures have risen by approximately 1 1 degrees Celsius since pre-industrial times",
+        "chunks": [
+          {"label": "NP", "tokens": ["Scientists"]},
+          {"label": "VP", "tokens": ["have", "recorded"]},
+          {"label": "NP", "tokens": ["that", "global", "temperatures"]},
+          {"label": "VP", "tokens": ["have", "risen"]},
+          {"label": "OTHER", "tokens": ["by"]},
+          {"label": "OTHER", "tokens": ["approximately"]},
+          {"label": "OTHER", "tokens": ["1"]},
+          {"label": "OTHER", "tokens": ["1"]},
+          {"label": "NP", "tokens": ["degrees", "Celsius"]},
+          {"label": "OTHER", "tokens": ["since"]},
+          {"label": "NP", "tokens": ["pre-industrial", "times"]}
+        ]
+      },
+      {
+        "id": 7,
+        "score": 0.326,
+        "text": "The Intergovernmental Panel on Climate Change that is the IPCC warns that warming must be limited to 1 5 degrees Celsius",
+        "chunks": [
+          {"label": "NP", "tokens": ["The", "Intergovernmental", "Panel"]},
+          {"label": "OTHER", "tokens": ["on"]},
+          {"label": "VP", "tokens": ["Climate"]},
+          {"label": "NP", "tokens": ["Change"]},
+          {"label": "OTHER", "tokens": ["that"]},
+          {"label": "OTHER", "tokens": ["is"]},
+          {"label": "NP", "tokens": ["the", "IPCC"]},
+          {"label": "VP", "tokens": ["warns"]},
+          {"label": "NP", "tokens": ["that", "warming"]},
+          {"label": "VP", "tokens": ["must", "be", "limited"]},
+          {"label": "OTHER", "tokens": ["to"]},
+          {"label": "OTHER", "tokens": ["1"]},
+          {"label": "OTHER", "tokens": ["5"]},
+          {"label": "NP", "tokens": ["degrees", "Celsius"]}
+        ]
+      },
+      {
+        "id": 12,
+        "score": 0.318,
+        "text": "Solar power harnesses energy from the sun using photovoltaic cells or solar thermal collection systems",
+        "chunks": [
+          {"label": "NP", "tokens": ["Solar", "power"]},
+          {"label": "VP", "tokens": ["harnesses"]},
+          {"label": "NP", "tokens": ["energy"]},
+          {"label": "PP", "tokens": ["from", "the", "sun"]},
+          {"label": "VP", "tokens": ["using"]},
+          {"label": "NP", "tokens": ["photovoltaic", "cells"]},
+          {"label": "OTHER", "tokens": ["or"]},
+          {"label": "NP", "tokens": ["solar"]},
+          {"label": "NP", "tokens": ["thermal", "collection", "systems"]}
+        ]
+      }
+    ]
+    },
+    {
+      "topic_id": 4,
+      "sentences": [
+      {
+        "id": 0,
+        "score": 0.308,
+        "text": "The Earth's climate has been changing at an unprecedented rate over the past century",
+        "chunks": [
+          {"label": "NP", "tokens": ["The", "Earth's"]},
+          {"label": "VP", "tokens": ["climate"]},
+          {"label": "VP", "tokens": ["has", "been", "changing"]},
+          {"label": "OTHER", "tokens": ["at"]},
+          {"label": "OTHER", "tokens": ["an"]},
+          {"label": "OTHER", "tokens": ["unprecedented"]},
+          {"label": "VP", "tokens": ["rate"]},
+          {"label": "PP", "tokens": ["over", "the", "past", "century"]}
+        ]
+      },
+      {
+        "id": 10,
+        "score": 0.341,
+        "text": "To mitigate climate change the world must urgently transition toward cleaner and sustainable energy sources",
+        "chunks": [
+          {"label": "OTHER", "tokens": ["To"]},
+          {"label": "VP", "tokens": ["mitigate", "climate"]},
+          {"label": "NP", "tokens": ["change"]},
+          {"label": "NP", "tokens": ["the", "world"]},
+          {"label": "VP", "tokens": ["must", "urgently", "transition"]},
+          {"label": "NP", "tokens": ["toward", "cleaner"]},
+          {"label": "OTHER", "tokens": ["and"]},
+          {"label": "NP", "tokens": ["sustainable", "energy", "sources"]}
+        ]
+      },
+      {
+        "id": 11,
+        "score": 0.332,
+        "text": "Renewable energy refers to power derived from natural sources that replenish themselves continuously for example sunlight and wind",
+        "chunks": [
+          {"label": "NP", "tokens": ["Renewable", "energy", "refers"]},
+          {"label": "OTHER", "tokens": ["to"]},
+          {"label": "VP", "tokens": ["power", "derived"]},
+          {"label": "PP", "tokens": ["from", "natural", "sources"]},
+          {"label": "NP", "tokens": ["that", "replenish"]},
+          {"label": "VP", "tokens": ["themselves"]},
+          {"label": "OTHER", "tokens": ["continuously"]},
+          {"label": "PP", "tokens": ["for", "example", "sunlight"]},
+          {"label": "OTHER", "tokens": ["and"]},
+          {"label": "NP", "tokens": ["wind"]}
+        ]
+      },
+      {
+        "id": 13,
+        "score": 0.336,
+        "text": "Wind energy is generated by turbines that convert kinetic energy from the wind into electrical power",
+        "chunks": [
+          {"label": "NP", "tokens": ["Wind", "energy"]},
+          {"label": "VP", "tokens": ["is", "generated"]},
+          {"label": "PP", "tokens": ["by", "turbines"]},
+          {"label": "OTHER", "tokens": ["that"]},
+          {"label": "VP", "tokens": ["convert"]},
+          {"label": "NP", "tokens": ["kinetic", "energy"]},
+          {"label": "PP", "tokens": ["from", "the", "wind"]},
+          {"label": "PP", "tokens": ["into", "electrical", "power"]}
+        ]
+      },
+      {
+        "id": 14,
+        "score": 0.319,
+        "text": "Hydropower which uses flowing water to spin turbines is one of the oldest forms of renewable energy",
+        "chunks": [
+          {"label": "NP", "tokens": ["Hydropower"]},
+          {"label": "OTHER", "tokens": ["which"]},
+          {"label": "VP", "tokens": ["uses"]},
+          {"label": "NP", "tokens": ["flowing", "water"]},
+          {"label": "OTHER", "tokens": ["to"]},
+          {"label": "VP", "tokens": ["spin"]},
+          {"label": "NP", "tokens": ["turbines"]},
+          {"label": "VP", "tokens": ["is", "one"]},
+          {"label": "PP", "tokens": ["of", "the", "oldest"]},
+          {"label": "VP", "tokens": ["forms"]},
+          {"label": "PP", "tokens": ["of", "renewable", "energy"]}
+        ]
+      },
+      {
+        "id": 15,
+        "score": 0.319,
+        "text": "Geothermal energy taps heat stored within the Earth and provides a stable consistent and low-emission power supply",
+        "chunks": [
+          {"label": "NP", "tokens": ["Geothermal", "energy"]},
+          {"label": "VP", "tokens": ["taps"]},
+          {"label": "NP", "tokens": ["heat"]},
+          {"label": "VP", "tokens": ["stored"]},
+          {"label": "PP", "tokens": ["within", "the", "Earth"]},
+          {"label": "OTHER", "tokens": ["and"]},
+          {"label": "VP", "tokens": ["provides"]},
+          {"label": "NP", "tokens": ["a", "stable", "consistent"]},
+          {"label": "OTHER", "tokens": ["and"]},
+          {"label": "NP", "tokens": ["low-emission", "power"]},
+          {"label": "OTHER", "tokens": ["supply"]}
+        ]
+      },
+      {
+        "id": 17,
+        "score": 0.323,
+        "text": "Governments around the world are investing heavily in renewable energy infrastructure and large-scale grid modernization projects",
+        "chunks": [
+          {"label": "NP", "tokens": ["Governments", "around"]},
+          {"label": "NP", "tokens": ["the", "world"]},
+          {"label": "VP", "tokens": ["are", "investing"]},
+          {"label": "OTHER", "tokens": ["heavily"]},
+          {"label": "PP", "tokens": ["in", "renewable", "energy", "infrastructure"]},
+          {"label": "OTHER", "tokens": ["and"]},
+          {"label": "NP", "tokens": ["large-scale", "grid", "modernization", "projects"]}
+        ]
+      },
+      {
+        "id": 19,
+        "score": 0.331,
+        "text": "Smart grids enable more efficient and resilient distribution of electricity from diverse renewable energy sources",
+        "chunks": [
+          {"label": "NP", "tokens": ["Smart", "grids"]},
+          {"label": "VP", "tokens": ["enable"]},
+          {"label": "NP", "tokens": ["more", "efficient"]},
+          {"label": "OTHER", "tokens": ["and"]},
+          {"label": "NP", "tokens": ["resilient", "distribution"]},
+          {"label": "PP", "tokens": ["of", "electricity"]},
+          {"label": "PP", "tokens": ["from", "diverse"]},
+          {"label": "NP", "tokens": ["renewable", "energy", "sources"]}
+        ]
+      },
+      {
+        "id": 29,
+        "score": 0.326,
+        "text": "Together the shift from fossil fuels to renewable energy and electric transportation represents humanity's best path forward against climate change",
+        "chunks": [
+          {"label": "NP", "tokens": ["Together"]},
+          {"label": "NP", "tokens": ["the", "shift"]},
+          {"label": "PP", "tokens": ["from", "fossil", "fuels"]},
+          {"label": "OTHER", "tokens": ["to"]},
+          {"label": "NP", "tokens": ["renewable", "energy"]},
+          {"label": "OTHER", "tokens": ["and"]},
+          {"label": "NP", "tokens": ["electric", "transportation"]},
+          {"label": "VP", "tokens": ["represents"]},
+          {"label": "NP", "tokens": ["humanity's", "best", "path", "forward"]},
+          {"label": "OTHER", "tokens": ["against"]},
+          {"label": "VP", "tokens": ["climate"]},
+          {"label": "NP", "tokens": ["change"]}
+        ]
+      }
+    ]
+    }
+  ]
+}
